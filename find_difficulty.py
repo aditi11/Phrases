@@ -11,7 +11,7 @@ interval=[0,2,4,7,5,3,1,9,10,8,6]
 
 
 csvfile=open('difficulty.csv','w')
-fieldnames=['Phrase','Number','Span','Consonance','Interval','Difficulty']
+fieldnames=['Phrase','Number','Span','Consonance','Interval','Consequent svars','Difficulty']
 writer=csv.DictWriter(csvfile,fieldnames=fieldnames)
 writer.writeheader()
 
@@ -52,7 +52,29 @@ for i in phrases:
 			differences=differences+interval.index(abs(j[k]-j[k+1]))
 		for k in j:
 			cons=cons+exp(float(consonance.index(k)/10))
-		difficulty=cons+differences+float(span)/number+number
-		writer.writerow({'Phrase':j,'Number':number,'Span':span,'Consonance':'%.3f'%cons,'Interval':differences,'Difficulty':difficulty})
+		consecutive=0
+		count_dict={}
+		for k in j:
+			if k not in count_dict:
+				count_dict[k]=0
+		count=0
+		index=0
+		while index<number-1:
+			if j[index]==j[index+1]:
+				count=count+1
+				if index==number-2:
+					if count>count_dict[j[index]]:
+						count_dict[j[index]]=count+1
+				index=index+1
+			else:
+				if count>count_dict[j[index]]:
+					count_dict[j[index]]=count+1
+					count=0
+				index=index+1
+		consequent=0
+		for k in count_dict:
+			consequent=consequent+count_dict[k]
+		difficulty=cons+differences+float(span)/number+number-consequent
+		writer.writerow({'Phrase':j,'Number':number,'Span':span,'Consonance':'%.3f'%cons,'Interval':differences,'Consequent svars':consequent,'Difficulty':difficulty})
 
 csvfile.close()
