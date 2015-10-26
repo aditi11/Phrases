@@ -7,9 +7,6 @@ svar_map={'S':[0,12],'r':[1,13],'R':[2,14],'g':[3,15],'G':[4,16],'m':[5,17],'M':
 single_map={'S':0,'r':1,'R':2,'g':3,'G':4,'m':5,'M':6,'P':7,'d':8,'D':9,'n':10,'N':11}
 svar_index_map={}
 
-csvfile=open('difficulty.csv','r')
-phrases=csv.DictReader(csvfile)
-
 input_file=open('nodes.csv','r')
 nodes=csv.reader(input_file)
 
@@ -37,12 +34,16 @@ for i in edges:
 		else:
 			binary_avroh[ragas.index(raga)]=binary_avroh[ragas.index(raga)][:single_map[svar_index_map[svar]]]+'1'+binary_avroh[ragas.index(raga)][single_map[svar_index_map[svar]]+1:]
 
+print ragas
+
 for l in ragas:
+	print l
 	possible_phrases_aaroh=[]
 	possible_phrases_avroh=[]
 	index=1
+	csvfile=open('difficulty.csv','r')
+	phrases=csv.DictReader(csvfile)
 	for k in phrases:
-		print k
 		i=ast.literal_eval(k['Phrase'])
 		diff=k['Difficulty']
 		aaroh_exists=0
@@ -86,4 +87,5 @@ for l in ragas:
 	output_file.write('\nAvroh:\n')
 	json.dump(possible_phrases_avroh,output_file,indent=2)
 	output_file.close()
+	csvfile.close()
 	
